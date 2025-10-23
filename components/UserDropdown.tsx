@@ -1,5 +1,7 @@
 "use client";
 
+import { Button } from "./ui/button";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -7,15 +9,19 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "./ui/dropdown-menu";
+import { ChevronDown, LogOut } from "lucide-react";
+import { NavItems } from "./NavItems";
 import { useRouter } from "next/navigation";
-import { Button } from "./ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut } from "lucide-react";
-import NavItems from "./NavItems";
 import { signOut } from "@/lib/actions/auth.actions";
 
-const UserDropdown = ({ user }: { user: User }) => {
+export const UserDropdown = ({
+  user,
+  initialStocks,
+}: {
+  user: User;
+  initialStocks: StockWithWatchlistStatus[];
+}) => {
   const router = useRouter();
 
   const handleSignOut = async () => {
@@ -28,10 +34,9 @@ const UserDropdown = ({ user }: { user: User }) => {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="flex items-center gap-3 text-gray-400 hover:text-yellow-500"
+          className="flex items-center gap-3 text-gray-400 hover:text-yellow-500 hover:!bg-transparent transition-colors px-3 py-2 h-12 rounded-lg focus:ring-0 focus-visible:ring-0 bg-transparent"
         >
-          <Avatar className="h-8 w-8">
-            <AvatarImage src="https://github.com/shadcn.png" />
+          <Avatar className="h-8 w-8 ">
             <AvatarFallback className="bg-yellow-500 text-yellow-900 text-sm font-bold">
               {user.name[0]}
             </AvatarFallback>
@@ -41,14 +46,17 @@ const UserDropdown = ({ user }: { user: User }) => {
               {user.name}
             </span>
           </div>
+          <ChevronDown className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="text-gray-400">
-        <DropdownMenuLabel>
+      <DropdownMenuContent
+        className="w-56 bg-gray-800 border-gray-600 text-gray-400"
+        align="end"
+      >
+        <DropdownMenuLabel className="text-gray-400">
           <div className="flex relative items-center gap-3 py-2">
             <Avatar className="h-10 w-10">
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback className="bg-yellow-500 text-yellow-900 text-sm font-bold">
+              <AvatarFallback className="bg-yellow-500 text-yellow-900 text-base font-bold">
                 {user.name[0]}
               </AvatarFallback>
             </Avatar>
@@ -68,13 +76,11 @@ const UserDropdown = ({ user }: { user: User }) => {
           <LogOut className="h-4 w-4 mr-2 hidden sm:block" />
           Logout
         </DropdownMenuItem>
-        <DropdownMenuSeparator className="hidden sm:block bg-gray-600" />
+        <DropdownMenuSeparator className="hidden sm:blockbg-gray-600" />
         <nav className="sm:hidden">
-          <NavItems />
+          <NavItems initialStocks={initialStocks} />
         </nav>
       </DropdownMenuContent>
     </DropdownMenu>
   );
 };
-
-export default UserDropdown;
